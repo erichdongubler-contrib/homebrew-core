@@ -1,9 +1,8 @@
 class AwsSdkCpp < Formula
   desc "AWS SDK for C++"
   homepage "https://github.com/aws/aws-sdk-cpp"
-  url "https://github.com/aws/aws-sdk-cpp.git",
-      tag:      "1.11.465",
-      revision: "ddc4966ac2d0d26ff6e9bed0ae58d5d90e889fba"
+  url "https://github.com/aws/aws-sdk-cpp/archive/refs/tags/1.11.465.tar.gz"
+  sha256 "3bf855c882b93d72d2da8e4e829ba29b66b85fa28f548fb7499e7a96d6a22315"
   license "Apache-2.0"
   head "https://github.com/aws/aws-sdk-cpp.git", branch: "main"
 
@@ -21,26 +20,35 @@ class AwsSdkCpp < Formula
   end
 
   depends_on "cmake" => :build
+  depends_on "aws-c-auth"
+  depends_on "aws-c-common"
+  depends_on "aws-c-event-stream"
+  depends_on "aws-c-http"
+  depends_on "aws-c-io"
+  depends_on "aws-c-s3"
+  depends_on "aws-crt-cpp"
 
   uses_from_macos "curl"
   uses_from_macos "zlib"
 
-  on_linux do
-    depends_on "openssl@3"
-  end
-
-  conflicts_with "s2n", because: "both install s2n/unstable/crl.h"
-
   def install
-    ENV.append "LDFLAGS", "-Wl,-rpath,#{rpath}"
     # Avoid OOM failure on Github runner
     ENV.deparallelize if OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"].present?
 
-    system "cmake", "-S", ".", "-B", "build", *std_cmake_args, "-DENABLE_TESTING=OFF"
+    linker_flags = ["-Wl,-rpath,#{rpath}"]
+    # Avoid overlinking to aws-c-* indirect dependencies
+    linker_flags << "-Wl,-dead_strip_dylibs" if OS.mac?
+
+    args = %W[
+      -DBUILD_DEPS=OFF
+      -DCMAKE_MODULE_PATH=#{Formula["aws-c-common"].opt_lib}/cmake
+      -DCMAKE_SHARED_LINKER_FLAGS=#{linker_flags.join(" ")}
+      -DENABLE_TESTING=OFF
+    ]
+
+    system "cmake", "-S", ".", "-B", "build", *args, *std_cmake_args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
-
-    lib.install Dir[lib/"mac/Release/*"].select { |f| File.file? f }
   end
 
   test do
