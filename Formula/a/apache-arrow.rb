@@ -5,7 +5,7 @@ class ApacheArrow < Formula
   mirror "https://archive.apache.org/dist/arrow/arrow-18.1.0/apache-arrow-18.1.0.tar.gz"
   sha256 "2dc8da5f8796afe213ecc5e5aba85bb82d91520eff3cf315784a52d0fa61d7fc"
   license "Apache-2.0"
-  revision 4
+  revision 5
   head "https://github.com/apache/arrow.git", branch: "main"
 
   bottle do
@@ -20,13 +20,12 @@ class ApacheArrow < Formula
   depends_on "boost" => :build
   depends_on "cmake" => :build
   depends_on "gflags" => :build
-  depends_on "ninja" => :build
   depends_on "rapidjson" => :build
   depends_on "xsimd" => :build
   depends_on "abseil"
+  depends_on "aws-crt-cpp"
   depends_on "aws-sdk-cpp"
   depends_on "brotli"
-  depends_on "c-ares"
   depends_on "grpc"
   depends_on "llvm"
   depends_on "lz4"
@@ -79,10 +78,16 @@ class ApacheArrow < Formula
       -DARROW_WITH_UTF8PROC=ON
       -DARROW_INSTALL_NAME_RPATH=OFF
       -DPARQUET_BUILD_EXECUTABLES=ON
-      -GNinja
     ]
-
     args << "-DARROW_MIMALLOC=ON" unless Hardware::CPU.arm?
+    # Reduce overlinking. Can remove on Linux if GCC 11 issue is fixed
+    args << "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,#{OS.mac? ? "-dead_strip_dylibs" : "--as-needed"}"
+    # ARROW_SIMD_LEVEL sets the minimum required SIMD. Since this defaults to
+    # SSE4.2 on x86_64, we need to reduce level to match oldest supported CPU.
+    # Ref: https://arrow.apache.org/docs/cpp/env_vars.html#envvar-ARROW_USER_SIMD_LEVEL
+    if build.bottle? && Hardware::CPU.intel? && (!OS.mac? || !MacOS.version.requires_sse42?)
+      args << "-DARROW_SIMD_LEVEL=NONE"
+    end
 
     system "cmake", "-S", "cpp", "-B", "build", *args, *std_cmake_args
     system "cmake", "--build", "build"
