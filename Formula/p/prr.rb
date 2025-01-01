@@ -2,7 +2,7 @@ class Prr < Formula
   desc "Mailing list style code reviews for github"
   homepage "https://github.com/danobi/prr"
   license "GPL-2.0-only"
-  revision 1
+  revision 2
   head "https://github.com/danobi/prr.git", branch: "master"
 
   stable do
@@ -34,7 +34,7 @@ class Prr < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "openssl@3"
 
   uses_from_macos "zlib"
@@ -69,7 +69,7 @@ class Prr < Formula
     assert_match "Failed to read config", shell_output("#{bin}/prr get Homebrew/homebrew-core/6 2>&1", 1)
 
     [
-      Formula["libgit2"].opt_lib/shared_library("libgit2"),
+      Formula["libgit2@1.8"].opt_lib/shared_library("libgit2"),
       Formula["openssl@3"].opt_lib/shared_library("libssl"),
       Formula["openssl@3"].opt_lib/shared_library("libcrypto"),
     ].each do |library|
