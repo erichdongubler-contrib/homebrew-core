@@ -4,6 +4,7 @@ class CargoUdeps < Formula
   url "https://github.com/est31/cargo-udeps/archive/refs/tags/v0.1.53.tar.gz"
   sha256 "fc4581c996dcbd8a9e660f49a55ada68e39c4b07a0eda9bd8efe1006e1dd1c73"
   license any_of: ["Apache-2.0", "MIT"]
+  revision 1
 
   bottle do
     sha256 cellar: :any,                 arm64_sequoia: "12be653d70676ad78cc09e4a2a0080ea7bc05dd2e26d97edd7aaa6c4dbe99dd5"
@@ -17,7 +18,7 @@ class CargoUdeps < Formula
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
   depends_on "rustup" => :test
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "libssh2"
   depends_on "openssl@3"
 
@@ -28,6 +29,7 @@ class CargoUdeps < Formula
     ENV["LIBSSH2_SYS_USE_PKG_CONFIG"] = "1"
     ENV["OPENSSL_DIR"] = Formula["openssl@3"].opt_prefix
     ENV["OPENSSL_NO_VENDOR"] = "1"
+
     system "cargo", "install", "--no-default-features", *std_cargo_args
   end
 
@@ -64,7 +66,7 @@ class CargoUdeps < Formula
     end
 
     [
-      Formula["libgit2"].opt_lib/shared_library("libgit2"),
+      Formula["libgit2@1.8"].opt_lib/shared_library("libgit2"),
       Formula["libssh2"].opt_lib/shared_library("libssh2"),
       Formula["openssl@3"].opt_lib/shared_library("libssl"),
       Formula["openssl@3"].opt_lib/shared_library("libcrypto"),
