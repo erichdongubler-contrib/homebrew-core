@@ -4,6 +4,7 @@ class Sheldon < Formula
   url "https://github.com/rossmacarthur/sheldon/archive/refs/tags/0.8.0.tar.gz"
   sha256 "71c6c27b30d1555e11d253756a4fce515600221ec6de6c06f9afb3db8122e5b5"
   license any_of: ["Apache-2.0", "MIT"]
+  revision 1
   head "https://github.com/rossmacarthur/sheldon.git", branch: "trunk"
 
   bottle do
@@ -18,14 +19,13 @@ class Sheldon < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "openssl@3"
 
   # curl-config on ventura builds do not report http2 feature,
-  # this is a workaround to allow to build against system curl
   # see discussions in https://github.com/Homebrew/homebrew-core/pull/197727
-  uses_from_macos "curl" => :build, since: :sonoma
-  uses_from_macos "curl"
+  # FIXME: We should be able to use macOS curl on Ventura, but `curl-config` is broken.
+  uses_from_macos "curl", since: :sonoma
 
   def install
     # Ensure the declared `openssl@3` dependency will be picked up.
@@ -56,7 +56,7 @@ class Sheldon < Formula
     assert_path_exists testpath/"plugins.lock"
 
     libraries = [
-      Formula["libgit2"].opt_lib/shared_library("libgit2"),
+      Formula["libgit2@1.8"].opt_lib/shared_library("libgit2"),
       Formula["openssl@3"].opt_lib/shared_library("libssl"),
       Formula["openssl@3"].opt_lib/shared_library("libcrypto"),
     ]
