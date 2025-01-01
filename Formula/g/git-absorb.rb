@@ -4,6 +4,7 @@ class GitAbsorb < Formula
   url "https://github.com/tummychow/git-absorb/archive/refs/tags/0.6.16.tar.gz"
   sha256 "d0fac448801674a4d4d5d42d6ef2d2e21545ad66755023c531a273a47893a573"
   license "BSD-3-Clause"
+  revision 1
 
   bottle do
     sha256 cellar: :any,                 arm64_sequoia: "642563694d9d397f39c68368965fa1f80b0e76840ce400f4f92c7e3b07dfe7e2"
@@ -16,7 +17,7 @@ class GitAbsorb < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
 
   def install
     ENV["LIBGIT2_NO_VENDOR"] = "1"
@@ -45,7 +46,7 @@ class GitAbsorb < Formula
     linkage_with_libgit2 = (bin/"git-absorb").dynamically_linked_libraries.any? do |dll|
       next false unless dll.start_with?(HOMEBREW_PREFIX.to_s)
 
-      File.realpath(dll) == (Formula["libgit2"].opt_lib/shared_library("libgit2")).realpath.to_s
+      File.realpath(dll) == (Formula["libgit2@1.8"].opt_lib/shared_library("libgit2")).realpath.to_s
     end
 
     assert linkage_with_libgit2, "No linkage with libgit2! Cargo is likely using a vendored version."
