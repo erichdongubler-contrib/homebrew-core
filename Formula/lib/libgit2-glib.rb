@@ -4,7 +4,7 @@ class Libgit2Glib < Formula
   url "https://gitlab.gnome.org/GNOME/libgit2-glib/-/archive/v1.2.0/libgit2-glib-v1.2.0.tar.bz2"
   sha256 "421ac5c99e02c5b6235842e60eb7f9fa8dc580d2500fb1eb521ced8a22de9f29"
   license "LGPL-2.1-only"
-  revision 2
+  revision 3
   head "https://gitlab.gnome.org/GNOME/libgit2-glib.git", branch: "master"
 
   bottle do
@@ -22,7 +22,7 @@ class Libgit2Glib < Formula
   depends_on "pkgconf" => :build
   depends_on "vala" => :build
   depends_on "glib"
-  depends_on "libgit2"
+  depends_on "libgit2@1.8"
 
   on_macos do
     depends_on "gettext"
