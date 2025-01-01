@@ -4,6 +4,7 @@ class Fselect < Formula
   url "https://github.com/jhspetersson/fselect/archive/refs/tags/0.8.8.tar.gz"
   sha256 "0f586c3870a66d4a3ab7b92409dcf0f68a23bd8031ec0cc3f1622efebe190c9e"
   license any_of: ["Apache-2.0", "MIT"]
+  revision 1
 
   bottle do
     sha256 cellar: :any,                 arm64_sequoia: "e5e7b20338ffee88d3d873a8833eebb899d178d664b69d9ec1467f183b83a7bd"
@@ -17,7 +18,7 @@ class Fselect < Formula
   depends_on "cmake" => :build # for libz-ng-sys
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "openssl@3"
 
   uses_from_macos "bzip2"
@@ -46,7 +47,7 @@ class Fselect < Formula
     assert_match "test.txt", shell_output(cmd).chomp
 
     linked_libraries = [
-      Formula["libgit2"].opt_lib/shared_library("libgit2"),
+      Formula["libgit2@1.8"].opt_lib/shared_library("libgit2"),
       Formula["openssl@3"].opt_lib/shared_library("libcrypto"),
       Formula["openssl@3"].opt_lib/shared_library("libssl"),
     ]
