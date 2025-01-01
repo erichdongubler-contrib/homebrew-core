@@ -1,8 +1,8 @@
 class Lutok < Formula
   desc "Lightweight C++ API for Lua"
   homepage "https://github.com/freebsd/lutok"
-  url "https://github.com/freebsd/lutok/releases/download/lutok-0.5/lutok-0.5.tar.gz"
-  sha256 "9cdc3cf08babec6e70a96a907d82f8b34eac866dd7196abc73b95d5e13701f55"
+  url "https://github.com/freebsd/lutok/releases/download/lutok-0.6/lutok-0.6.tar.gz"
+  sha256 "07bbb1685a246a3d2a1bbb13536e800033aa3e0a5ad41ce9fc89d94c920e319e"
   license "BSD-3-Clause"
 
   bottle do
@@ -21,12 +21,6 @@ class Lutok < Formula
 
   depends_on "atf"
   depends_on "lua"
-
-  # add configure.ac patch, upstream pr ref, https://github.com/freebsd/lutok/pull/24
-  patch do
-    url "https://github.com/freebsd/lutok/commit/b2e45d2848f64e1178eb0c6ed44d0b8fc4ea5dea.patch?full_index=1"
-    sha256 "0dbb00bd646343f3b8b61e07222e5ca21ae85028c84772b1eb5b0feba098b4b8"
-  end
 
   def install
     system "glibtoolize", "--force", "--install"
