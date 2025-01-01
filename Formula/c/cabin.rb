@@ -4,6 +4,7 @@ class Cabin < Formula
   url "https://github.com/cabinpkg/cabin/archive/refs/tags/0.11.0.tar.gz"
   sha256 "0ffefbfa8aa26a55c9acb058943a35a4d316ad13f588fee0c66ee5e16673e657"
   license "Apache-2.0"
+  revision 1
   head "https://github.com/cabinpkg/cabin.git", branch: "main"
 
   bottle do
@@ -19,7 +20,7 @@ class Cabin < Formula
   depends_on "toml11" => :build
   depends_on "curl"
   depends_on "fmt"
-  depends_on "libgit2"
+  depends_on "libgit2@1.8"
   depends_on "pkgconf"
   depends_on "tbb"
 
