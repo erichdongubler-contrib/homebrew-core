@@ -4,6 +4,7 @@ class Mise < Formula
   url "https://github.com/jdx/mise/archive/refs/tags/v2024.12.24.tar.gz"
   sha256 "82b96daf3df808f0c08af1d9f3b9dee700c3634191f8669a21b9d45905ad566b"
   license "MIT"
+  revision 1
   head "https://github.com/jdx/mise.git", branch: "main"
 
   livecheck do
@@ -23,7 +24,7 @@ class Mise < Formula
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
 
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "openssl@3"
   depends_on "usage"
 
@@ -72,7 +73,7 @@ class Mise < Formula
     assert_match "1.23", shell_output("#{bin}/mise exec -- go version")
 
     [
-      Formula["libgit2"].opt_lib/shared_library("libgit2"),
+      Formula["libgit2@1.8"].opt_lib/shared_library("libgit2"),
       Formula["openssl@3"].opt_lib/shared_library("libssl"),
       Formula["openssl@3"].opt_lib/shared_library("libcrypto"),
     ].each do |library|
