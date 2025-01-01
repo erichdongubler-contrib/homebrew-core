@@ -4,7 +4,7 @@ class GitDelta < Formula
   url "https://github.com/dandavison/delta/archive/refs/tags/0.18.2.tar.gz"
   sha256 "64717c3b3335b44a252b8e99713e080cbf7944308b96252bc175317b10004f02"
   license "MIT"
-  revision 1
+  revision 2
   head "https://github.com/dandavison/delta.git", branch: "main"
 
   bottle do
@@ -18,7 +18,7 @@ class GitDelta < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "oniguruma"
 
   uses_from_macos "zlib"
