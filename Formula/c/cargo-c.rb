@@ -4,6 +4,7 @@ class CargoC < Formula
   url "https://github.com/lu-zero/cargo-c/archive/refs/tags/v0.10.7.tar.gz"
   sha256 "c4532dd2bf23769df5f64649d5b0c037fb2a29467c74d16a54bad3054d9f3f3a"
   license "MIT"
+  revision 1
 
   livecheck do
     url :stable
@@ -21,7 +22,7 @@ class CargoC < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "libssh2"
   depends_on "openssl@3"
 
@@ -55,7 +56,7 @@ class CargoC < Formula
     assert_match cargo_error, shell_output("#{bin}/cargo-cbuild cbuild 2>&1", 1)
 
     [
-      Formula["libgit2"].opt_lib/shared_library("libgit2"),
+      Formula["libgit2@1.8"].opt_lib/shared_library("libgit2"),
       Formula["libssh2"].opt_lib/shared_library("libssh2"),
       Formula["openssl@3"].opt_lib/shared_library("libssl"),
       Formula["openssl@3"].opt_lib/shared_library("libcrypto"),
