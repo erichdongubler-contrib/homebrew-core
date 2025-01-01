@@ -4,6 +4,7 @@ class Gfold < Formula
   url "https://github.com/nickgerace/gfold/archive/refs/tags/4.6.0.tar.gz"
   sha256 "f965daa340349b04bd9d29b5013dcb3006d2f5333cdbae1f1e3901a685e7bf7d"
   license "Apache-2.0"
+  revision 1
   head "https://github.com/nickgerace/gfold.git", branch: "main"
 
   bottle do
@@ -17,7 +18,7 @@ class Gfold < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
 
   uses_from_macos "zlib"
 
@@ -45,7 +46,7 @@ class Gfold < Formula
     linkage_with_libgit2 = (bin/"gfold").dynamically_linked_libraries.any? do |dll|
       next false unless dll.start_with?(HOMEBREW_PREFIX.to_s)
 
-      File.realpath(dll) == (Formula["libgit2"].opt_lib/shared_library("libgit2")).realpath.to_s
+      File.realpath(dll) == (Formula["libgit2@1.8"].opt_lib/shared_library("libgit2")).realpath.to_s
     end
 
     assert linkage_with_libgit2, "No linkage with libgit2! Cargo is likely using a vendored version."
