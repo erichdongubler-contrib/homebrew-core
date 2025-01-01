@@ -2,7 +2,7 @@ class Bat < Formula
   desc "Clone of cat(1) with syntax highlighting and Git integration"
   homepage "https://github.com/sharkdp/bat"
   license any_of: ["Apache-2.0", "MIT"]
-  revision 1
+  revision 2
   head "https://github.com/sharkdp/bat.git", branch: "master"
 
   # Remove `stable` block when patch is no longer needed.
@@ -27,7 +27,7 @@ class Bat < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "oniguruma"
 
   def install
@@ -59,7 +59,7 @@ class Bat < Formula
     assert_match "Homebrew test", output
 
     [
-      Formula["libgit2"].opt_lib/shared_library("libgit2"),
+      Formula["libgit2@1.8"].opt_lib/shared_library("libgit2"),
       Formula["oniguruma"].opt_lib/shared_library("libonig"),
     ].each do |library|
       assert check_binary_linkage(bin/"bat", library),
