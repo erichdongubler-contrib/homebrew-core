@@ -4,6 +4,7 @@ class CargoShuttle < Formula
   url "https://github.com/shuttle-hq/shuttle/archive/refs/tags/v0.49.0.tar.gz"
   sha256 "fe13c6a0717edd1d6ec838c6abf02d3230b379083d4daf8f63621d47d1ceded6"
   license "Apache-2.0"
+  revision 1
   head "https://github.com/shuttle-hq/shuttle.git", branch: "main"
 
   bottle do
@@ -17,7 +18,7 @@ class CargoShuttle < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
 
   uses_from_macos "bzip2"
 
