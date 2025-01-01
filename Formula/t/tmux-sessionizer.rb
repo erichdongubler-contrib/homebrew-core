@@ -4,6 +4,7 @@ class TmuxSessionizer < Formula
   url "https://github.com/jrmoulton/tmux-sessionizer/archive/refs/tags/v0.4.4.tar.gz"
   sha256 "9dfbe99a3c1fe7f48be0c1ab9056e49f36c4f85d023e24f874254f6791a9894e"
   license "MIT"
+  revision 1
 
   bottle do
     rebuild 1
@@ -17,7 +18,7 @@ class TmuxSessionizer < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "libssh2"
   depends_on "openssl@3"
 
@@ -49,7 +50,7 @@ class TmuxSessionizer < Formula
     assert_match version.to_s, shell_output("#{bin}/tms --version")
 
     [
-      Formula["libgit2"].opt_lib/shared_library("libgit2"),
+      Formula["libgit2@1.8"].opt_lib/shared_library("libgit2"),
       Formula["libssh2"].opt_lib/shared_library("libssh2"),
       Formula["openssl@3"].opt_lib/shared_library("libssl"),
       Formula["openssl@3"].opt_lib/shared_library("libcrypto"),
