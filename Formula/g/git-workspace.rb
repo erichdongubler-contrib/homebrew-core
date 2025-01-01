@@ -4,6 +4,7 @@ class GitWorkspace < Formula
   url "https://github.com/orf/git-workspace/archive/refs/tags/v1.8.0.tar.gz"
   sha256 "b6499b70362730dbe1674fd07bd9aefef0bcd45ba4504ed0cce62ef2c7ecad1f"
   license "MIT"
+  revision 1
 
   bottle do
     sha256 cellar: :any,                 arm64_sequoia: "6a4fe8611f58904c04941f7d24f0c05690e94a530e1a5c6a65e1b66ea17a63c7"
@@ -16,7 +17,7 @@ class GitWorkspace < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
   depends_on "openssl@3"
 
   def install
@@ -35,7 +36,7 @@ class GitWorkspace < Formula
     linkage_with_libgit2 = (bin/"git-workspace").dynamically_linked_libraries.any? do |dll|
       next false unless dll.start_with?(HOMEBREW_PREFIX.to_s)
 
-      File.realpath(dll) == (Formula["libgit2"].opt_lib/shared_library("libgit2")).realpath.to_s
+      File.realpath(dll) == (Formula["libgit2@1.8"].opt_lib/shared_library("libgit2")).realpath.to_s
     end
 
     assert linkage_with_libgit2, "No linkage with libgit2! Cargo is likely using a vendored version."
