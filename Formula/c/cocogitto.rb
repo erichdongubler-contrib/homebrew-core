@@ -4,7 +4,7 @@ class Cocogitto < Formula
   url "https://github.com/cocogitto/cocogitto/archive/refs/tags/6.2.0.tar.gz"
   sha256 "fd7d69fb5b6d64e292877d87a77864d5081906b6e515e20b93348b7f05bd05c1"
   license "MIT"
-  revision 1
+  revision 2
 
   bottle do
     sha256 cellar: :any,                 arm64_sequoia: "815c4318d69c91b36986c47f897fba9e5823d9b239998383bb41ec56f37daf2d"
@@ -17,7 +17,7 @@ class Cocogitto < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
 
   conflicts_with "cog", because: "both install `cog` binaries"
 
@@ -50,7 +50,7 @@ class Cocogitto < Formula
     linkage_with_libgit2 = (bin/"cog").dynamically_linked_libraries.any? do |dll|
       next false unless dll.start_with?(HOMEBREW_PREFIX.to_s)
 
-      File.realpath(dll) == (Formula["libgit2"].opt_lib/shared_library("libgit2")).realpath.to_s
+      File.realpath(dll) == (Formula["libgit2@1.8"].opt_lib/shared_library("libgit2")).realpath.to_s
     end
 
     assert linkage_with_libgit2, "No linkage with libgit2! Cargo is likely using a vendored version."
