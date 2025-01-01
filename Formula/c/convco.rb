@@ -4,6 +4,7 @@ class Convco < Formula
   url "https://github.com/convco/convco/archive/refs/tags/v0.6.1.tar.gz"
   sha256 "ed68341e065f76f22b6d93ff3686836a812f6a031dc7ee00bed7e048b0da4294"
   license "MIT"
+  revision 1
   head "https://github.com/convco/convco.git", branch: "master"
 
   bottle do
@@ -17,7 +18,7 @@ class Convco < Formula
 
   depends_on "pkgconf" => :build
   depends_on "rust" => :build
-  depends_on "libgit2"
+  depends_on "libgit2@1.8" # needs https://github.com/rust-lang/git2-rs/issues/1109 to support libgit2 1.9
 
   def install
     ENV["LIBGIT2_NO_VENDOR"] = "1"
@@ -39,7 +40,7 @@ class Convco < Formula
     linkage_with_libgit2 = (bin/"convco").dynamically_linked_libraries.any? do |dll|
       next false unless dll.start_with?(HOMEBREW_PREFIX.to_s)
 
-      File.realpath(dll) == (Formula["libgit2"].opt_lib/shared_library("libgit2")).realpath.to_s
+      File.realpath(dll) == (Formula["libgit2@1.8"].opt_lib/shared_library("libgit2")).realpath.to_s
     end
     assert linkage_with_libgit2, "No linkage with libgit2! Cargo is likely using a vendored version."
   end
