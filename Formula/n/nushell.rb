@@ -4,6 +4,7 @@ class Nushell < Formula
   url "https://github.com/nushell/nushell/archive/refs/tags/0.101.0.tar.gz"
   sha256 "43e4a123e86f0fb4754e40d0e2962b69a04f8c2d58470f47cb9be81daabab347"
   license "MIT"
+  revision 1
   head "https://github.com/nushell/nushell.git", branch: "main"
 
   livecheck do
@@ -29,7 +30,7 @@ class Nushell < Formula
 
   on_linux do
     depends_on "pkgconf" => :build
-    depends_on "libgit2" # for `nu_plugin_gstat`
+    depends_on "libgit2@1.8" # for `nu_plugin_gstat`
     depends_on "libx11"
     depends_on "libxcb"
   end
